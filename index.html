@@ -1,12 +1,13 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Lisztomania - Explorer of Knowledge</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <style>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Lisztomania - Explorer of Knowledge</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+<style>
     * {
       margin: 0;
       padding: 0;
@@ -523,100 +524,87 @@
   </style>
 </head>
 <body>
-  <!-- Background Animation -->
-  <div class="background-container">
-    <div class="stars" id="stars"></div>
-    <div class="floating-particles" id="particles"></div>
-  </div>
+<!-- Background Animation -->
+<div class="background-container">
+<div class="stars" id="stars"></div>
+<div class="floating-particles" id="particles"></div>
+</div>
+<!-- Header -->
+<header class="header">
+<div class="nav-container">
 
-  <!-- Header -->
-  <header class="header">
-    <div class="nav-container">
-      <a href="#" class="logo">
-        <i class="fas fa-music"></i>
-        Lisztomania
-      </a>
-      <nav class="nav-links">
-        <a href="#about">About</a>
-        <a href="#connect">Connect</a>
-        <a href="#interests">Interests</a>
-      </nav>
-    </div>
-  </header>
-
-  <!-- Music Player -->
-  <div class="music-player">
-    <button id="musicToggle" class="music-toggle" onclick="toggleMusic()">
-      <i id="musicIcon" class="fas fa-headphones-alt"></i>
-    </button>
-    <div class="music-label">Want Hear?</div>
-  </div>
-
-  <!-- Audio Element -->
-  <audio id="bg-music" loop>
-    <source src="https://media.vocaroo.com/mp3/1cTo09sXUXj4" type="audio/mp3">
+<nav class="nav-links">
+<a href="#about">About</a>
+<a href="#connect">Connect</a>
+<a href="#interests">Interests</a>
+</nav>
+</div>
+</header>
+<!-- Music Player -->
+<div class="music-player">
+<button class="music-toggle" id="musicToggle" onclick="toggleMusic()">
+<i class="fas fa-headphones-alt" id="musicIcon"></i>
+</button>
+<div class="music-label">Want Hear?</div>
+</div>
+<!-- Audio Element -->
+<audio id="bg-music" loop="">
+<source src="https://media.vocaroo.com/mp3/1cTo09sXUXj4" type="audio/mp3"/>
     Your browser does not support the audio element.
   </audio>
-
-  <!-- Main Content -->
-  <div class="main-container">
-    <!-- Hero Section -->
-    <section class="hero-section">
-      <h1 class="hero-title">I'm a Lisztomania</h1>
-      <p class="hero-subtitle">Explorer of Knowledge • Seeker of Wisdom • Digital Wanderer</p>
-      
-      <div class="hero-quote">
-        Fulfill your task, yet seek no gain,<br>
-        Let not the outcome bind your chain.<br>
-        For in the work, serene and true,<br>
+<!-- Main Content -->
+<div class="main-container">
+<!-- Hero Section -->
+<section class="hero-section">
+<h1 class="hero-title">I'm a Lisztomania</h1>
+<p class="hero-subtitle">Explorer of Knowledge • Seeker of Wisdom • Digital Wanderer</p>
+<div class="hero-quote">
+        Fulfill your task, yet seek no gain,<br/>
+        Let not the outcome bind your chain.<br/>
+        For in the work, serene and true,<br/>
         A deeper peace will come to you.
       </div>
-    </section>
-
-    <!-- Typing Animation Section -->
-    <section class="typing-section fade-in">
-      <div class="typing-header">
-        <i class="fas fa-terminal"></i>
-        <span>About Me</span>
-      </div>
-      <div class="typing-text" id="typing-text"></div>
-    </section>
-
-    <!-- Social Links Section -->
-    <section class="social-section fade-in">
-      <h2 class="social-title">Let's Connect</h2>
-      <div class="social-links">
-        <a class="social-link" href="https://www.tiktok.com/@avaxlc" target="_blank">
-          <i class="fab fa-tiktok" style="color: #ff0050;"></i>
-          <span>TikTok</span>
-        </a>
-        <a class="social-link" href="https://t.me/yourusername" target="_blank">
-          <i class="fab fa-telegram" style="color: #0088cc;"></i>
-          <span>Telegram</span>
-        </a>
-        <a class="social-link" href="https://x.com/glacier_4444" target="_blank">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="#1da1f2" style="margin-right: 4px;">
-            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-          </svg>
-          <span>Twitter / X</span>
-        </a>
-        <a class="social-link" href="https://youtube.com/@moongate_1234" target="_blank">
-          <i class="fab fa-youtube" style="color: #ff0000;"></i>
-          <span>YouTube</span>
-        </a>
-      </div>
-    </section>
-  </div>
-
-  <!-- Footer -->
-  <footer class="footer">
-    <div class="footer-content">
-      <p>&copy; 2025 Lisztomania.xyz • Crafted with passion and curiosity</p>
-      
-    </div>
-  </footer>
-
-  <script>
+</section>
+<!-- Typing Animation Section -->
+<section class="typing-section fade-in">
+<div class="typing-header">
+<i class="fas fa-terminal"></i>
+<span>About Me</span>
+</div>
+<div class="typing-text" id="typing-text"></div>
+</section>
+<!-- Social Links Section -->
+<section class="social-section fade-in">
+<h2 class="social-title">Let's Connect</h2>
+<div class="social-links">
+<a class="social-link" href="https://www.tiktok.com/@avaxlc" target="_blank">
+<i class="fab fa-tiktok" style="color: #ff0050;"></i>
+<span>TikTok</span>
+</a>
+<a class="social-link" href="https://t.me/yourusername" target="_blank">
+<i class="fab fa-telegram" style="color: #0088cc;"></i>
+<span>Telegram</span>
+</a>
+<a class="social-link" href="https://x.com/glacier_4444" target="_blank">
+<svg fill="#1da1f2" height="16" style="margin-right: 4px;" viewbox="0 0 24 24" width="16">
+<path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path>
+</svg>
+<span>Twitter / X</span>
+</a>
+<a class="social-link" href="https://youtube.com/@moongate_1234" target="_blank">
+<i class="fab fa-youtube" style="color: #ff0000;"></i>
+<span>YouTube</span>
+</a>
+</div>
+</section>
+</div>
+<!-- Footer -->
+<footer class="footer">
+<div class="footer-content">
+<p>© 2025 Lisztomania.xyz • Crafted with passion and curiosity</p>
+</div>
+</footer>
+<script>
     // Typing Animation
     const text = `Hey! Welcome to my little corner of the internet! 🌟
 
