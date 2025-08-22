@@ -1,14 +1,15 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lisztomania | Digital Enigma</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Lisztomania | Digital Enigma</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+<style>
         /* --- PENGATURAN DASAR & VARIABEL WARNA --- */
         :root {
             /* Tema Gelap (Default) */
@@ -134,15 +135,38 @@
             width: 100%;
         }
 
+        .hero-left {
+            justify-self: center;
+        }
+        
+        .profile-image {
+            width: 250px;
+            height: 250px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--border);
+            box-shadow: 0 10px 40px var(--shadow);
+            transition: all 0.4s ease;
+        }
+        
+        .profile-image:hover {
+            transform: scale(1.05);
+            border-color: var(--border-hover);
+        }
+
         @media (min-width: 992px) {
             .hero-layout {
-                grid-template-columns: repeat(2, 1fr);
+                grid-template-columns: 300px 1fr;
+                gap: 5rem;
                 text-align: left;
+            }
+            .hero-left {
+                justify-self: start;
             }
         }
 
         .name {
-            font-size: clamp(3rem, 10vw, 5rem);
+            font-size: clamp(3rem, 10vw, 4.5rem);
             font-weight: 700;
             margin-bottom: 1.5rem;
             font-family: 'JetBrains Mono', monospace;
@@ -156,7 +180,7 @@
 
         .description {
             max-width: 500px;
-            font-size: 1.1rem;
+            font-size: 1rem;
             color: var(--secondary);
             line-height: 1.8;
             font-weight: 300;
@@ -221,6 +245,7 @@
             font-weight: 500;
             font-size: 0.95rem;
             transition: all 0.3s ease;
+            margin-top: auto; /* Mendorong tombol ke bawah */
         }
         .project-link:hover { color: var(--accent-hover); transform: translateX(4px); }
         .project-link .arrow { transition: transform 0.3s ease; }
@@ -248,11 +273,17 @@
             transform: translateY(0);
         }
 
+        @media (max-width: 991px) {
+            .hero-layout { text-align: center; }
+            .description { margin: 0 auto; }
+        }
+
         @media (max-width: 768px) {
             .container { padding: 0 1.5rem; }
             header { padding-top: 8rem; padding-bottom: 4rem; min-height: auto; }
             #theme-toggle { top: 1rem; right: 1rem; }
             .section-title { font-size: 2rem; }
+            .profile-image { width: 180px; height: 180px; }
         }
 
         @media (max-width: 480px) {
@@ -261,105 +292,127 @@
             .description { font-size: 1rem; }
             .project-card, .social-link { padding: 1.5rem; }
         }
-    </style>
+    
+/* Animated description */
+.description p {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.8s ease forwards;
+}
+.description p:nth-child(1) { animation-delay: 0.2s; }
+.description p:nth-child(2) { animation-delay: 0.4s; }
+.description p:nth-child(3) { animation-delay: 0.6s; }
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Clean top-bar notification */
+.top-bar {
+  position: fixed;
+  top: -60px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(20, 20, 20, 0.9);
+  color: #fff;
+  padding: 0.8rem 1.5rem;
+  border-radius: 30px;
+  font-size: 1rem;
+  font-weight: 500;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  z-index: 9999;
+  transition: top 0.5s ease;
+  text-align: center;
+}
+.top-bar.show {
+  top: 20px;
+}
+</style>
 </head>
 <body>
-    
-    <div id="interactive-bg"></div>
-
-    <button id="theme-toggle" aria-label="Toggle theme">
-        <i class="fas fa-moon"></i>
-        <i class="fas fa-sun"></i>
-    </button>
-    
-    <div class="container">
-        <header>
-            <div class="hero-layout">
-                <div class="hero-left reveal">
-                    <h1 class="name" data-text="Lisztomania">Lisztomania</h1>
-                </div>
-                <div class="hero-right reveal" style="transition-delay: 0.2s;">
-                    <div class="description">
-                        <p>I am someone who loves to seek, weave, and reflect on the meaning behind many things. I often talk about music, football, online games, crypto, currencies, economics, philosophy, politics, community, gambling, history, spirituality, and more. For me, these are not merely hobbies or fields of knowledge, but spaces to understand life from different perspectives.</p>
-                        <p>I am not always looking for final answers; I enjoy the process of questioning, exploring, and discovering meanings that are often ambiguous yet beautiful. In my reflections, I often touch on ego, ambition, dreams, and the way the world works—an attempt to understand how humans move, grow, and struggle within a complex reality.</p>
-                        <p>I have also written and compiled 333 notes on a personal ideology, contemplative, ambiguous, and spiritual in nature—not meant to be believed, but to be understood, interpreted, and revised with the beauty of differences.</p>
-                        <p>I enjoy thought experiments and reflective questions as a way to explore personality and open new spaces for contemplation.</p>
-                        <p>For me, life is an endless space of learning. Every conversation, every question, and even every confusion is part of a greater narrative of who I am and how I wish to understand the world.</p>
-                    </div>
-                </div>
-            </div>
-        </header>
-
-        <main>
-            <section class="social-section" style="margin-bottom: 6rem;">
-                <div class="social-links">
-                    <a href="https://x.com/kina_dadegen" class="social-link glass-effect reveal" target="_blank" rel="noopener">
-                        <i class="fab fa-twitter social-icon"></i>
-                        <span>Twitter</span>
-                    </a>
-                    <a href="https://t.me/airdropfinderadmin" class="social-link glass-effect reveal" target="_blank" rel="noopener" style="transition-delay: 0.1s;">
-                        <i class="fab fa-telegram social-icon"></i>
-                        <span>Telegram</span>
-                    </a>
-                    <a href="https://www.tiktok.com/@avaxlc?_t=ZS-8xOV0iYdYyF&_r=1" class="social-link glass-effect reveal" target="_blank" rel="noopener" style="transition-delay: 0.2s;">
-                        <i class="fab fa-tiktok social-icon"></i>
-                        <span>TikTok</span>
-                    </a>
-                    <a href="https://youtube.com/@moongate_1234?si=ameVCLIER8nA36Ml" class="social-link glass-effect reveal" target="_blank" rel="noopener" style="transition-delay: 0.3s;">
-                        <i class="fab fa-youtube social-icon"></i>
-                        <span>YouTube</span>
-                    </a>
-                </div>
-            </section>
-
-            <section class="projects-section">
-                <h2 class="section-title reveal">Active Projects</h2>
-                <div class="projects-grid">
-                    <div class="project-card glass-effect reveal" style="transition-delay: 0.1s;">
-                        <div class="project-header">
-                            <i class="fas fa-brain project-icon"></i>
-                            <h3 class="project-title">MentalCore</h3>
-                        </div>
-                        <p class="project-description">
-                            A crypto platform based on mental concepts and open ideological communities. Exploring the intersection of consciousness and decentralized technology.
-                        </p>
-                        <a href="https://www.mentalmeco.fun" class="project-link" target="_blank" rel="noopener">
-                            Visit Platform
-                            <i class="fas fa-arrow-right arrow"></i>
-                        </a>
-                    </div>
-
-                    <div class="project-card glass-effect reveal" style="transition-delay: 0.2s;">
-                        <div class="project-header">
-                            <i class="fas fa-gamepad project-icon"></i>
-                            <h3 class="project-title">UniJump</h3>
-                        </div>
-                        <p class="project-description">
-                            A Telegram mini-app game with reward features and social interactions. Building engaging experiences within the messaging ecosystem.
-                        </p>
-                        <a href="https://t.me/unijump_bot/game?startapp=ref6106361105977315983" class="project-link" target="_blank" rel="noopener">
-                            Play Game
-                            <i class="fas fa-arrow-right arrow"></i>
-                        </a>
-                    </div>
-                </div>
-            </section>
-        </main>
-    </div>
-
-    <footer class="reveal">
-        <div class="container">
-            <p>&copy; 2025 Lisztomania. Crafted with curiosity and code.</p>
-        </div>
-    </footer>
-
-    <script>
+<div id="interactive-bg"></div>
+<button aria-label="Toggle theme" id="theme-toggle">
+<i class="fas fa-moon"></i>
+<i class="fas fa-sun"></i>
+</button>
+<div class="container">
+<header>
+<div class="hero-layout">
+<div class="hero-left reveal">
+<img alt="Profile Picture" class="profile-image" src="https://i.postimg.cc/26ZwyGRZ/f4byuc.jpg"/>
+</div>
+<div class="hero-right reveal" style="transition-delay: 0.2s;">
+<h1 class="name">Lisztomania</h1>
+<div class="description">
+<p>Honestly, I never really know what to put here. Nothing fancy about me — just someone who enjoys talking behind a screen.</p>
+<p>I’m into random stuff: philosophy, music, football, games, Chinese fiction, politics, crypto, even gambling sometimes. Not an expert at all, just like keeping up and chatting about them.</p>
+<p>If you feel like dropping by, sharing thoughts, or just killing time online, links below are open.</p>
+</div>
+</div>
+</div>
+</header>
+<main>
+<section class="social-section" style="margin-bottom: 6rem;">
+<div class="social-links">
+<a class="social-link glass-effect reveal" href="https://x.com/kina_dadegen" rel="noopener" target="_blank">
+<i class="fab fa-twitter social-icon"></i>
+<span>Twitter</span>
+</a>
+<a class="social-link glass-effect reveal" href="https://t.me/airdropfinderadmin" rel="noopener" style="transition-delay: 0.1s;" target="_blank">
+<i class="fab fa-telegram social-icon"></i>
+<span>Telegram</span>
+</a>
+<a class="social-link glass-effect reveal" href="https://www.tiktok.com/@avaxlc?_t=ZS-8xOV0iYdYyF&amp;_r=1" rel="noopener" style="transition-delay: 0.2s;" target="_blank">
+<i class="fab fa-tiktok social-icon"></i>
+<span>TikTok</span>
+</a>
+<a class="social-link glass-effect reveal" href="https://youtube.com/@moongate_1234?si=ameVCLIER8nA36Ml" rel="noopener" style="transition-delay: 0.3s;" target="_blank">
+<i class="fab fa-youtube social-icon"></i>
+<span>YouTube</span>
+</a>
+</div>
+</section>
+<section class="projects-section">
+<h2 class="section-title reveal">Active Projects</h2>
+<div class="projects-grid">
+<div class="project-card glass-effect reveal" style="transition-delay: 0.1s;">
+<div class="project-header">
+<i class="fas fa-book-open project-icon"></i>
+<h3 class="project-title">about 333</h3>
+</div>
+<p class="project-description">333 is something personal and kind of abstract — it’s about ego, war, duty, and those messy moral dilemmas. Not meant to be believed, more like something to think about and keep questioning.</p>
+<a class="project-link" href="#" id="read-333-button">
+        Read
+        <i class="fas fa-arrow-right arrow"></i>
+</a>
+</div>
+<div class="project-card glass-effect reveal" style="transition-delay: 0.2s;">
+<div class="project-header">
+<i class="fas fa-gamepad project-icon"></i>
+<h3 class="project-title">UniJump</h3>
+</div>
+<p class="project-description">A mini-game on Telegram with rewards and some social bits. Just trying to make it fun and a little more engaging inside the chat app world.</p>
+<a class="project-link" href="https://t.me/unijump_bot/game?startapp=ref6106361105977315983" rel="noopener" target="_blank">
+        Play Game
+        <i class="fas fa-arrow-right arrow"></i>
+</a>
+</div>
+</div>
+</section>
+</main>
+</div>
+<footer class="reveal">
+<div class="container">
+<p>© 2025 Lisztomania. Crafted with curiosity and code.</p>
+</div>
+</footer>
+<script>
         document.addEventListener('DOMContentLoaded', function() {
             // --- FUNGSI LOGIKA TEMA (TERANG/GELAP) ---
             const themeToggle = document.getElementById('theme-toggle');
             const body = document.body;
 
-            // Cek tema tersimpan di localStorage
             const savedTheme = localStorage.getItem('theme');
             if (savedTheme) {
                 body.classList.add(savedTheme);
@@ -402,7 +455,58 @@
             revealElements.forEach(el => {
                 observer.observe(el);
             });
+
+            // --- FUNGSI KLIK "AVAILABLE SOON" UNTUK TOMBOL READ ---
+            const read333Button = document.getElementById('read-333-button');
+            if (read333Button) {
+                read333Button.addEventListener('click', (event) => {
+                    event.preventDefault(); // Mencegah link berpindah halaman
+                    alert('Available soon');
+                });
+            }
         });
-    </script>
+    
+
+// Handle "about 333" Read button
+document.addEventListener('DOMContentLoaded', () => {
+    const readBtn = document.getElementById('read-333-button');
+    if (readBtn) {
+        readBtn.addEventListener('click', (event) => {
+            event.preventDefault();
+            const existingBar = document.querySelector('.top-bar');
+            if (existingBar) existingBar.remove();
+
+            const bar = document.createElement('div');
+            bar.className = 'top-bar';
+            bar.innerText = '🚧 Available soon 🚧';
+            document.body.appendChild(bar);
+            setTimeout(() => bar.classList.add('show'), 50);
+            setTimeout(() => {
+                bar.classList.remove('show');
+                setTimeout(() => bar.remove(), 600);
+            }, 3000);
+        });
+    }
+
+    // Profile image click bar
+    const profileImg = document.querySelector('.profile-image');
+    if (profileImg) {
+        profileImg.addEventListener('click', () => {
+            const existingBar = document.querySelector('.top-bar');
+            if (existingBar) existingBar.remove();
+
+            const bar = document.createElement('div');
+            bar.className = 'top-bar';
+            bar.innerText = "🐝 What's good honey? 🍯";
+            document.body.appendChild(bar);
+            setTimeout(() => bar.classList.add('show'), 50);
+            setTimeout(() => {
+                bar.classList.remove('show');
+                setTimeout(() => bar.remove(), 600);
+            }, 3000);
+        });
+    }
+});
+</script>
 </body>
 </html>
