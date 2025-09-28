@@ -37,15 +37,16 @@ body.light-mode{
 
 /* Resets */
 *{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
 body{font-family:Inter,sans-serif;background:var(--bg);color:var(--primary);line-height:1.6;overflow-x:hidden;transition:background-color .4s,color .4s}
 ::selection{background:var(--accent);color:#fff}
 
 /* ===== Ghibli Background (FIXED) ===== */
-#ghibli-bg{position:fixed;inset:0;z-index:-3;overflow:hidden;pointer-events:none}
+#ghibli-bg{position:fixed;inset:0;z-index:-3;overflow:hidden;pointer-events:none;contain:layout paint style}
 .sky{position:absolute;inset:0;background:linear-gradient(to bottom,var(--sky-top) 0%,var(--sky-mid) 45%,var(--sky-bot) 100%)}
 .sun{position:absolute;left:12%;top:12%;width:340px;height:340px;border-radius:50%;
   background:radial-gradient(circle at 50% 50%,var(--sun) 0%, rgba(255,208,98,.85) 20%, rgba(255,208,98,.25) 55%, transparent 70%);
-  filter:blur(1px);opacity:.9;animation:floatSun 14s ease-in-out infinite}
+  filter:blur(1px);opacity:.9;animation:floatSun 14s ease-in-out infinite;will-change:transform}
 @keyframes floatSun{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
 .hill{position:absolute;left:0;right:0}
 .h1{bottom:0;z-index:0;opacity:.95}
@@ -63,6 +64,8 @@ body{font-family:Inter,sans-serif;background:var(--bg);color:var(--primary);line
 /* Glass card */
 .glass{background:var(--bg-card);backdrop-filter:blur(18px);border:1px solid var(--border);border-radius:16px;transition:.25s}
 .glass:hover{border-color:var(--border-strong);transform:translateY(-2px);box-shadow:0 10px 28px var(--shadow)}
+/* Perf: avoid offscreen work for heavy blocks */
+.glass, .link, .card, .acc {content-visibility:auto; contain:layout paint style; contain-intrinsic-size: 300px 150px}
 
 /* Hero */
 header{min-height:100vh;display:flex;align-items:center;justify-content:center}
@@ -73,7 +76,7 @@ header{min-height:100vh;display:flex;align-items:center;justify-content:center}
 .title{font-size:clamp(2.6rem,9vw,4.5rem);font-weight:700;margin-bottom:1rem;font-family:"JetBrains Mono",monospace;letter-spacing:-.04em;line-height:1.1}
 
 /* ===== Avatar + Frame ===== */
-.pfp-wrap{position:relative;width:270px;height:270px;display:grid;place-items:center}
+.pfp-wrap{position:relative;width:270px;height:270px;display:grid;place-items:center;will-change:transform}
 .pfp-frame{
   position:relative;width:270px;height:270px;border-radius:50%;
   display:grid;place-items:center;isolation:isolate;
@@ -99,7 +102,7 @@ header{min-height:100vh;display:flex;align-items:center;justify-content:center}
           mask: radial-gradient(farthest-side, transparent calc(100% - 10px), #000 0);
   filter:blur(.2px);
   animation:spin 16s linear infinite;
-  opacity:.9; z-index:-1;
+  opacity:.9; z-index:-1; will-change:transform;
 }
 
 /* Soft glow halo */
@@ -117,20 +120,10 @@ header{min-height:100vh;display:flex;align-items:center;justify-content:center}
   border:1px dashed rgba(255,255,255,.25);mix-blend:screen;pointer-events:none;
 }
 
-/* Tiny sparkle badges (subtle) */
-.pfp-badge{
-  position:absolute;right:10px;bottom:10px;display:grid;place-items:center;
-  width:42px;height:42px;border-radius:999px;
-  background:linear-gradient(180deg, rgba(255,255,255,.18), rgba(255,255,255,.06));
-  border:1px solid rgba(255,255,255,.28);backdrop-filter:blur(6px);
-  box-shadow:0 6px 16px rgba(0,0,0,.25), inset 0 0 12px rgba(99,102,241,.25);
-}
-.pfp-badge i{color:var(--accent);}
-
 /* Optional orbiting dot */
 .pfp-orbit{
   position:absolute;inset:-2px;border-radius:50%;pointer-events:none;
-  animation:spin 10s linear infinite;
+  animation:spin 10s linear infinite; will-change:transform;
 }
 .pfp-dot{
   position:absolute;top:50%;left:-6px;transform:translateY(-50%);
@@ -151,7 +144,7 @@ header{min-height:100vh;display:flex;align-items:center;justify-content:center}
 .stack{display:grid;gap:1rem}
 .acc{border:1px solid var(--border);border-radius:16px;overflow:hidden}
 .acc-hd{width:100%;display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1rem 1.25rem;cursor:pointer;background:transparent;color:var(--primary);border:0}
-.chev{transition:transform .25s ease}
+.chev{transition:transform .25s ease; will-change:transform}
 .acc.open .chev{transform:rotate(180deg)}
 .acc-body{border-top:1px solid var(--border);max-height:0;overflow:hidden;padding:0 1.25rem;transition:max-height .35s ease,padding .35s ease}
 .acc.open .acc-body{padding:1rem 1.25rem;max-height:650px}
@@ -190,9 +183,24 @@ main{padding:3.2rem 0}
 /* Footer */
 footer{text-align:center;padding:4rem 0 2rem;border-top:1px solid var(--border);color:var(--secondary);font-family:"JetBrains Mono",monospace}
 
-/* Reveal */
-.reveal{opacity:0;transform:translateY(24px);transition:.6s}
-.reveal.show{opacity:1;transform:translateY(0)}
+/* Reveal (perf-optimized) */
+.reveal{
+  opacity:0;
+  transform:translate3d(0,24px,0);
+  transition:
+    transform .68s cubic-bezier(.22,.61,.36,1),
+    opacity .68s ease-out;
+  transition-delay: var(--d, 0ms);
+  will-change: transform, opacity;
+  backface-visibility:hidden;
+}
+.reveal.show{
+  opacity:1;
+  transform:translate3d(0,0,0);
+}
+@media (prefers-reduced-motion:reduce){
+  .reveal{transition:none}
+}
 </style>
 </head>
 <body class="light-mode">
@@ -216,9 +224,7 @@ footer{text-align:center;padding:4rem 0 2rem;border-top:1px solid var(--border);
             <img class="pfp" src="https://i.ibb.co.com/FkKSkmbJ/1759073551217.png" alt="Profile"/>
             <span class="pfp-ring" aria-hidden="true"></span>
             <span class="pfp-orbit" aria-hidden="true"><span class="pfp-dot"></span></span>
-            <span class="pfp-badge" title="Music">
-              <i class="fa-solid fa-music"></i>
-            </span>
+            <!-- badge musik dihapus sesuai permintaan -->
           </div>
         </div>
       </div>
@@ -309,9 +315,29 @@ footer{text-align:center;padding:4rem 0 2rem;border-top:1px solid var(--border);
 <footer class="reveal"><div class="container"><p>© 2025 Lisztomania. Crafted with curiosity and code.</p></div></footer>
 
 <script>
-/* Reveal on scroll */
-const io=new IntersectionObserver((ents,o)=>{ents.forEach(en=>{if(en.isIntersecting){en.target.classList.add('show');o.unobserve(en.target);}});},{threshold:.12});
-document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+/* Reveal on scroll (rAF-batched + stagger) */
+const revealItems = Array.from(document.querySelectorAll('.reveal'));
+/* Set auto-stagger only if element doesn't already have inline transitionDelay */
+revealItems.forEach((el, i) => {
+  if (!el.style.transitionDelay) el.style.setProperty('--d', (i * 60) + 'ms');
+});
+
+const queue = new Set();
+const io = new IntersectionObserver((entries) => {
+  for (const en of entries) {
+    if (en.isIntersecting) queue.add(en.target);
+  }
+  /* Batch DOM writes to the next frame to avoid layout thrash */
+  requestAnimationFrame(() => {
+    queue.forEach(el => {
+      el.classList.add('show');
+      io.unobserve(el);
+      queue.delete(el);
+    });
+  });
+}, { threshold: 0.12, rootMargin: "0px 0px -5% 0px" });
+
+revealItems.forEach(el => io.observe(el));
 
 /* Accordion */
 document.querySelectorAll('[data-acc]').forEach(acc=>{
@@ -321,8 +347,8 @@ document.querySelectorAll('[data-acc]').forEach(acc=>{
     const open=acc.classList.toggle('open');
     hd.setAttribute('aria-expanded',open);
     panel.setAttribute('aria-hidden',!open);
-  });
+  }, {passive:true});
 });
 </script>
 </body>
-</html>
+  </html>
