@@ -11,11 +11,12 @@
 <style>
 /* ===== Theme Vars ===== */
 :root{
+  /* Biarkan var aslinya; body background ditimpa oleh kanvas metalik */
   --bg:#0a0a0b; --bg-card:rgba(17,17,22,.78); --border:rgba(255,255,255,.08);
   --border-strong:rgba(99,102,241,.35); --primary:#fff; --secondary:#a1a1aa;
   --accent:#6366f1; --accent-hover:#4f46e5; --shadow:rgba(0,0,0,.5);
 
-  /* Ghibli palette (dark) */
+  /* (Tak dipakai lagi karena diganti metallic), tetap dibiarkan agar layout lain aman */
   --sky-top:#0b1024; --sky-mid:#213a6b; --sky-bot:#3d78a6; --sun:#ffd86b;
   --hill-1:#214b35; --hill-2:#2b5e3f; --hill-3:#37724c; --grass:#3ea45f;
 
@@ -26,12 +27,13 @@
   --ring-4:#fde68a;   /* sun */
 }
 body.light-mode{
-  --bg:#f4f4f5; --bg-card:rgba(255,255,255,.78); --border:rgba(0,0,0,.08);
-  --border-strong:rgba(99,102,241,.5); --primary:#18181b; --secondary:#52525b;
-  --accent:#4f46e5; --accent-hover:#3730a3; --shadow:rgba(0,0,0,.08);
+  /* Paksa light-mode tetap pakai warna teks terang di atas bg gelap metalik */
+  --bg:#0a0a0b; --bg-card:rgba(255,255,255,.07); --border:rgba(255,255,255,.12);
+  --border-strong:rgba(99,102,241,.5); --primary:#f7f7fb; --secondary:#c8c8d0;
+  --accent:#8b5cf6; --accent-hover:#7c3aed; --shadow:rgba(0,0,0,.28);
 
-  /* Ghibli palette (light) */
-  --sky-top:#d9f1ff; --sky-mid:#bfe7ff; --sky-bot:#99d6ff; --sun:#ffd062;
+  /* Dummy agar kompatibel */
+  --sky-top:#0b1024; --sky-mid:#213a6b; --sky-bot:#3d78a6; --sun:#ffd062;
   --hill-1:#9ad39e; --hill-2:#7ccf90; --hill-3:#5fbf7e; --grass:#6fdc94;
 }
 
@@ -41,22 +43,51 @@ html{scroll-behavior:smooth}
 body{font-family:Inter,sans-serif;background:var(--bg);color:var(--primary);line-height:1.6;overflow-x:hidden;transition:background-color .4s,color .4s}
 ::selection{background:var(--accent);color:#fff}
 
-/* ===== Ghibli Background (FIXED) ===== */
-#ghibli-bg{position:fixed;inset:0;z-index:-3;overflow:hidden;pointer-events:none;contain:layout paint style}
-.sky{position:absolute;inset:0;background:linear-gradient(to bottom,var(--sky-top) 0%,var(--sky-mid) 45%,var(--sky-bot) 100%)}
-.sun{position:absolute;left:12%;top:12%;width:340px;height:340px;border-radius:50%;
-  background:radial-gradient(circle at 50% 50%,var(--sun) 0%, rgba(255,208,98,.85) 20%, rgba(255,208,98,.25) 55%, transparent 70%);
-  filter:blur(1px);opacity:.9;animation:floatSun 14s ease-in-out infinite;will-change:transform}
-@keyframes floatSun{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
-.hill{position:absolute;left:0;right:0}
-.h1{bottom:0;z-index:0;opacity:.95}
-.h2{bottom:5vh;z-index:1;opacity:.9}
-.h3{bottom:10vh;z-index:2;opacity:.95}
-.grass-band{position:absolute;left:-5vw;right:-5vw;bottom:0;height:18vh;z-index:3;
+/* ===== Metallic Black–Purple Background (FIXED) =====
+   Catatan:
+   - Tidak mengubah HTML/layout. Kita hanya menyembunyikan elemen Ghibli
+     dan menggantinya dengan lapisan metalik realistik berbasis gradient,
+     specular sheen, brushed stripes, dan noise halus.
+*/
+#ghibli-bg{
+  position:fixed;inset:0;z-index:-3;pointer-events:none;contain:layout paint style;
+  /* Lapisan 1: base dark violet -> black */
   background:
-    radial-gradient(60vh 22vh at 10% 100%, var(--grass), transparent 70%),
-    radial-gradient(70vh 24vh at 45% 100%, var(--grass), transparent 70%),
-    radial-gradient(60vh 22vh at 80% 100%, var(--grass), transparent 70%)}
+    radial-gradient(120% 100% at 80% 10%, rgba(130,52,255,.55) 0%, rgba(35,0,55,.55) 40%, rgba(10,7,18,1) 72%) ,
+    radial-gradient(160% 120% at 10% 90%, rgba(95,0,140,.35) 0%, rgba(0,0,0,0) 60%),
+    /* Lapisan 2: specular sheen diagonal (gloss) */
+    linear-gradient(120deg, rgba(255,255,255,.10) 0%, rgba(255,255,255,0) 28%, rgba(255,255,255,.08) 46%, rgba(255,255,255,0) 70%),
+    /* Lapisan 3: vignette lembut */
+    radial-gradient(140% 120% at 50% 60%, rgba(0,0,0,.0) 0%, rgba(0,0,0,.18) 70%),
+    /* Warna dasar */
+    linear-gradient(180deg, #0a0712 0%, #12051b 100%);
+  background-blend-mode: screen, normal, overlay, multiply, normal;
+  /* Tekstur: garis tipis "brushed metal" + noise halus */
+  --stripe: repeating-linear-gradient(0deg, rgba(255,255,255,.045) 0 1px, rgba(0,0,0,.06) 1px 2px);
+}
+#ghibli-bg::before,
+#ghibli-bg::after{
+  content:"";position:absolute;inset:0;pointer-events:none;
+}
+#ghibli-bg::before{
+  /* Brushed stripes sangat halus (skala kecil) */
+  background: var(--stripe);
+  mix-blend-mode:overlay;opacity:.18;
+  filter:blur(.2px);
+}
+#ghibli-bg::after{
+  /* Noise granular tipis untuk menambah realisme */
+  background-image:
+    radial-gradient(1px 1px at 10% 20%, rgba(255,255,255,.06) 0, transparent 60%),
+    radial-gradient(1px 1px at 30% 80%, rgba(255,255,255,.05) 0, transparent 60%),
+    radial-gradient(1px 1px at 70% 30%, rgba(255,255,255,.05) 0, transparent 60%),
+    radial-gradient(1px 1px at 85% 65%, rgba(255,255,255,.05) 0, transparent 60%),
+    radial-gradient(1px 1px at 50% 50%, rgba(255,255,255,.05) 0, transparent 60%);
+  background-size: 280px 280px, 260px 260px, 300px 300px, 340px 340px, 320px 320px;
+  mix-blend-mode:soft-light; opacity:.35;
+}
+/* Sembunyikan elemen Ghibli lama tanpa menyentuh HTML */
+#ghibli-bg .sky, #ghibli-bg .sun, #ghibli-bg .hill, #ghibli-bg .grass-band{display:none}
 
 /* Layout */
 .container{max-width:1100px;margin:0 auto;padding:0 1.2rem}
@@ -204,7 +235,7 @@ footer{text-align:center;padding:4rem 0 2rem;border-top:1px solid var(--border);
 </style>
 </head>
 <body class="light-mode">
-<!-- Ghibli Background: restored -->
+<!-- Metallic Background (menggunakan container lama, layout tetap) -->
 <div id="ghibli-bg" aria-hidden="true">
   <div class="sky"></div>
   <div class="sun"></div>
@@ -351,4 +382,4 @@ document.querySelectorAll('[data-acc]').forEach(acc=>{
 });
 </script>
 </body>
-  </html>
+                  </html>
