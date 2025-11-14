@@ -6,9 +6,58 @@
 <title>Lisztomania — About</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
 <style>
+/* LOADING EFFECT */
+#preloader {
+  position: fixed;
+  inset: 0;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999999;
+  opacity: 1;
+  transition: opacity 0.8s ease;
+}
+
+.loader-wrap {
+  text-align: center;
+}
+
+.loader-text {
+  font-size: 2.4rem;
+  letter-spacing: 6px;
+  font-weight: 600;
+  opacity: 0;
+  color: #ffffff;
+  animation: fadeInText 1.4s ease forwards;
+  font-family: 'Space Grotesk', sans-serif;
+}
+
+.loader-sub {
+  font-size: 0.78rem;
+  letter-spacing: 2px;
+  margin-top: 10px;
+  opacity: 0;
+  color: #bdbdbd;
+  animation: fadeInSub 1.4s ease forwards;
+  animation-delay: 0.8s;
+  font-family: 'Space Grotesk', sans-serif;
+}
+
+@keyframes fadeInText {
+  0% { opacity: 0; transform: translateY(12px); filter: blur(4px); }
+  100% { opacity: 1; transform: translateY(0); filter: blur(0); }
+}
+
+@keyframes fadeInSub {
+  0% { opacity: 0; transform: translateY(8px); }
+  100% { opacity: 0.7; transform: translateY(0); }
+}
+
+/* MAIN WEBSITE STYLES */
 :root{
   --bg: #000000;
   --bg-card: rgba(16,10,18,.60);
@@ -110,6 +159,113 @@ main{padding:3rem 0}
 .spotify-widget{margin:0;padding:0;border-radius:14px;overflow:hidden}
 .spotify-widget iframe{display:block;width:100%;border:none}
 
+/* STYLE UNTUK COMMENT SECTION */
+.comment-section {
+  margin: 3rem 0;
+}
+
+.comment-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-input, .form-textarea, .form-file {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.8rem 1rem;
+  color: var(--primary);
+  font-family: Inter, sans-serif;
+  font-size: 0.95rem;
+  transition: border-color 0.25s;
+}
+
+.form-input:focus, .form-textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.form-textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.form-file {
+  background: transparent;
+}
+
+.submit-btn {
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 1rem 1.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.25s;
+  align-self: flex-start;
+}
+
+.submit-btn:hover {
+  background: var(--accent-hover);
+}
+
+.comments-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.comment-item {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+
+.comment-header {
+  display: flex;
+  justify-content: between;
+  align-items: center;
+  margin-bottom: 0.8rem;
+}
+
+.comment-author {
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.comment-date {
+  color: var(--secondary);
+  font-size: 0.85rem;
+}
+
+.comment-text {
+  color: var(--secondary);
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.comment-image {
+  max-width: 200px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+
+.no-comments {
+  text-align: center;
+  color: var(--secondary);
+  padding: 2rem;
+}
+
 footer{text-align:center;padding:3rem 0 2.5rem;border-top:1px solid var(--border);color:var(--secondary);font-family:"JetBrains Mono",monospace;margin-top:2rem}
 
 .reveal{
@@ -120,6 +276,15 @@ footer{text-align:center;padding:3rem 0 2.5rem;border-top:1px solid var(--border
 </style>
 </head>
 <body>
+
+<!-- LOADING EFFECT -->
+<div id="preloader">
+  <div class="loader-wrap">
+    <div class="loader-text">Lisztomania</div>
+    <div class="loader-sub">hot as hell — cold as ice</div>
+  </div>
+</div>
+
 <div id="ghibli-bg"></div>
 
 <div class="container">
@@ -128,7 +293,7 @@ footer{text-align:center;padding:3rem 0 2.5rem;border-top:1px solid var(--border
       <div class="hero-left reveal">
         <div class="pfp-wrap">
           <div class="pfp-frame">
-            <img class="pfp" src="https://i.supaimg.com/5ca46856-6015-414c-bad6-e6aa66beeb4c.png" alt="Profile"/>
+            <img class="pfp" src="https://i.supaimg.com/81da567a-7d6f-43f8-adaa-4250e362c567.jpg" alt="Profile"/>
             <span class="pfp-orbit"><span class="pfp-dot"></span></span>
           </div>
         </div>
@@ -233,12 +398,64 @@ footer{text-align:center;padding:3rem 0 2.5rem;border-top:1px solid var(--border
         </div>
       </div>
     </div>
+
+    <!-- COMMENT SECTION - ENGLISH VERSION -->
+    <section class="comment-section">
+      <h2 class="section-title reveal">Leave a Comment</h2>
+      <div class="glass reveal" style="padding: 2rem;">
+        <form class="comment-form" id="commentForm">
+          <div class="form-group">
+            <label for="name" style="color: var(--secondary); font-size: 0.9rem;">Name:</label>
+            <input type="text" id="name" class="form-input" placeholder="Your name (optional)" maxlength="50">
+          </div>
+          
+          <div class="form-group">
+            <label for="message" style="color: var(--secondary); font-size: 0.9rem;">Message:</label>
+            <textarea id="message" class="form-textarea" placeholder="Write your message here..." required maxlength="500"></textarea>
+          </div>
+          
+          <div class="form-group">
+            <label for="image" style="color: var(--secondary); font-size: 0.9rem;">Image (optional):</label>
+            <input type="file" id="image" class="form-file" accept="image/*">
+            <small style="color: var(--secondary); font-size: 0.8rem;">Max 2MB, formats: JPG, PNG, GIF</small>
+          </div>
+          
+          <button type="submit" class="submit-btn">
+            <i class="fas fa-paper-plane"></i> Send Comment
+          </button>
+        </form>
+
+        <div class="comments-list" id="commentsList">
+          <!-- Comments will be loaded here -->
+        </div>
+      </div>
+    </section>
   </main>
 </div>
 
 <footer class="reveal"><div class="container"><p>© 2025 Lisztomania. Crafted with curiosity and code.</p></div></footer>
 
 <script>
+// LOADING EFFECT
+(function(){
+  const MIN_MS = 3000;
+  const start = Date.now();
+
+  function hide(){
+    const pre = document.getElementById("preloader");
+    if(!pre) return;
+    pre.style.opacity = "0";
+    setTimeout(()=> pre.remove(), 800);
+  }
+
+  window.addEventListener("load", ()=>{
+    const elapsed = Date.now() - start;
+    const wait = Math.max(0, MIN_MS - elapsed);
+    setTimeout(hide, wait);
+  });
+})();
+
+// Intersection Observer untuk reveal effect
 const revealItems = document.querySelectorAll('.reveal');
 const io = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
@@ -251,6 +468,7 @@ const io = new IntersectionObserver((entries) => {
 
 revealItems.forEach(el => io.observe(el));
 
+// Accordion functionality
 document.querySelectorAll('[data-acc]').forEach(acc => {
     const hd = acc.querySelector('.acc-hd');
     const panel = acc.querySelector('.acc-body');
@@ -261,6 +479,74 @@ document.querySelectorAll('[data-acc]').forEach(acc => {
         panel.setAttribute('aria-hidden', !open);
     });
 });
-</script>
-</body>
-</html>
+
+// COMMENT SYSTEM
+class CommentSystem {
+    constructor() {
+        this.commentsKey = 'websiteComments';
+        this.maxFileSize = 2 * 1024 * 1024; // 2MB
+        this.init();
+    }
+
+    init() {
+        this.loadComments();
+        this.setupForm();
+    }
+
+    setupForm() {
+        const form = document.getElementById('commentForm');
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            this.submitComment();
+        });
+
+        // File size validation
+        const fileInput = document.getElementById('image');
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file && file.size > this.maxFileSize) {
+                alert('File too large! Maximum 2MB.');
+                e.target.value = '';
+            }
+        });
+    }
+
+    submitComment() {
+        const name = document.getElementById('name').value.trim() || 'Anonymous';
+        const message = document.getElementById('message').value.trim();
+        const fileInput = document.getElementById('image');
+        
+        if (!message) {
+            alert('Please write a message first!');
+            return;
+        }
+
+        const comment = {
+            id: Date.now(),
+            name: name,
+            message: message,
+            timestamp: new Date().toLocaleString('en-US'),
+            image: null
+        };
+
+        // Handle image upload
+        if (fileInput.files[0]) {
+            this.readImageFile(fileInput.files[0])
+                .then(imageData => {
+                    comment.image = imageData;
+                    this.saveComment(comment);
+                })
+                .catch(error => {
+                    console.error('Error reading image:', error);
+                    this.saveComment(comment);
+                });
+        } else {
+            this.saveComment(comment);
+        }
+    }
+
+    readImageFile(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = (e) => resolve(e.target.result);
+            reader.one
