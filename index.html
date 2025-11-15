@@ -371,7 +371,7 @@ footer{text-align:center;padding:3rem 0 2.5rem;border-top:1px solid var(--border
         
         <h2 class="section-title wide reveal">Social Media</h2>
         <div class="social">
-          <a class="link glass reveal" href="https://x.com/catwifpiano" target="_blank" rel="noopener"><i class="fab fa-twitter"></i><span>Twitter</span></a>
+          <a class="link glass reveal" href="https://x.com/kina_dadegen" target="_blank" rel="noopener"><i class="fab fa-twitter"></i><span>Twitter</span></a>
           <a class="link glass reveal" href="https://t.me/airdropfinderadmin" target="_blank" rel="noopener"><i class="fab fa-telegram"></i><span>Telegram</span></a>
           <a class="link glass reveal" href="https://www.tiktok.com/@avaxlc?_t=ZS-8xOV0iYdYyF&_r=1" target="_blank" rel="noopener"><i class="fab fa-tiktok"></i><span>TikTok</span></a>
           <a class="link glass reveal" href="https://youtube.com/@moongate_1234?si=ameVCLIER8nA36Ml" target="_blank" rel="noopener"><i class="fab fa-youtube"></i><span>YouTube</span></a>
@@ -428,7 +428,14 @@ footer{text-align:center;padding:3rem 0 2.5rem;border-top:1px solid var(--border
 
 <footer class="reveal"><div class="container"><p>© 2025 Lisztomania. Crafted with curiosity and code.</p></div></footer>
 
-<script>
+<script type="module">
+import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+
+const db = createClient(
+  "https://jrhkxmrcyqhtipfceimo.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpyaGt4bXJjeXFodGlwZmNlaW1vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMxNDQyNTQsImV4cCI6MjA3ODcyMDI1NH0.uBr8_L63g_OTiS8RtEcus3a1vZ_lWoSOltZVMGVxKoA"
+);
+
 (function(){
   const MIN_MS = 3000;
   const start = Date.now();
@@ -470,131 +477,78 @@ document.querySelectorAll('[data-acc]').forEach(acc => {
     });
 });
 
-class CommentSystem {
-    constructor() {
-        this.commentsKey = 'websiteComments';
-        this.maxFileSize = 2 * 1024 * 1024;
-        this.init();
-    }
+const form = document.getElementById("commentForm");
+const nameField = document.getElementById("name");
+const msgField = document.getElementById("message");
+const list = document.getElementById("commentsList");
+const fileInput = document.getElementById("image");
 
-    init() {
-        this.loadComments();
-        this.setupForm();
-    }
-
-    setupForm() {
-        const form = document.getElementById('commentForm');
-        form.addEventListener('submit', (e) => {
-            e.preventDefault();
-            this.submitComment();
-        });
-
-        const fileInput = document.getElementById('image');
-        fileInput.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (file && file.size > this.maxFileSize) {
-                alert('File too large! Maximum 2MB.');
-                e.target.value = '';
-            }
-        });
-    }
-
-    submitComment() {
-        const name = document.getElementById('name').value.trim() || 'Anonymous';
-        const message = document.getElementById('message').value.trim();
-        const fileInput = document.getElementById('image');
-        
-        if (!message) {
-            alert('Please write a message first!');
-            return;
-        }
-
-        const comment = {
-            id: Date.now(),
-            name: name,
-            message: message,
-            timestamp: new Date().toLocaleString('en-US'),
-            image: null
-        };
-
-        if (fileInput.files[0]) {
-            this.readImageFile(fileInput.files[0])
-                .then(imageData => {
-                    comment.image = imageData;
-                    this.saveComment(comment);
-                })
-                .catch(error => {
-                    console.error('Error reading image:', error);
-                    this.saveComment(comment);
-                });
-        } else {
-            this.saveComment(comment);
-        }
-    }
-
-    readImageFile(file) {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onload = (e) => resolve(e.target.result);
-            reader.onerror = reject;
-            reader.readAsDataURL(file);
-        });
-    }
-
-    saveComment(comment) {
-        const comments = this.getComments();
-        comments.unshift(comment);
-        localStorage.setItem(this.commentsKey, JSON.stringify(comments));
-        
-        this.displayComments();
-        this.resetForm();
-        alert('Comment sent successfully!');
-    }
-
-    getComments() {
-        const stored = localStorage.getItem(this.commentsKey);
-        return stored ? JSON.parse(stored) : [];
-    }
-
-    displayComments() {
-        const commentsList = document.getElementById('commentsList');
-        const comments = this.getComments();
-
-        if (comments.length === 0) {
-            commentsList.innerHTML = '<div class="no-comments">No comments yet. Be the first to comment!</div>';
-            return;
-        }
-
-        commentsList.innerHTML = comments.map(comment => `
-            <div class="comment-item glass">
-                <div class="comment-header">
-                    <span class="comment-author">${this.escapeHtml(comment.name)}</span>
-                    <span class="comment-date">${comment.timestamp}</span>
-                </div>
-                <div class="comment-text">${this.escapeHtml(comment.message)}</div>
-                ${comment.image ? `<img src="${comment.image}" alt="Comment image" class="comment-image" loading="lazy">` : ''}
-            </div>
-        `).join('');
-    }
-
-    resetForm() {
-        document.getElementById('commentForm').reset();
-    }
-
-    escapeHtml(text) {
-        const div = document.createElement('div');
-        div.textContent = text;
-        return div.innerHTML;
-    }
-
-    loadComments() {
-        this.displayComments();
-    }
+function escape(s) {
+  return s.replace(/[&<>"']/g, m => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;"
+  }[m]));
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    new CommentSystem();
+async function loadComments() {
+  const { data } = await db
+    .from("Comment")
+    .select("*")
+    .order("created_at", { ascending: false });
+
+  list.innerHTML = data
+    .map(
+      r => `
+      <div class="comment-item glass">
+        <div class="comment-header">
+          <span class="comment-author">${escape(r.name || "Anonymous")}</span>
+          <span class="comment-date">${new Date(r.created_at).toLocaleString('en-US')}</span>
+        </div>
+        <div class="comment-text">${escape(r.message)}</div>
+      </div>
+    `
+    )
+    .join("");
+}
+
+form.addEventListener("submit", async e => {
+  e.preventDefault();
+  
+  const name = nameField.value || "Anonymous";
+  const message = msgField.value;
+  
+  if (!message) {
+    alert('Please write a message first!');
+    return;
+  }
+
+  if (fileInput.files[0] && fileInput.files[0].size > 2 * 1024 * 1024) {
+    alert('File too large! Maximum 2MB.');
+    return;
+  }
+
+  await db.from("Comment").insert({
+    name: name,
+    message: message
+  });
+  
+  msgField.value = "";
+  fileInput.value = "";
+  loadComments();
 });
+
+fileInput.addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  if (file && file.size > 2 * 1024 * 1024) {
+    alert('File too large! Maximum 2MB.');
+    e.target.value = '';
+  }
+});
+
+loadComments();
 </script>
 </body>
 </html>
