@@ -175,7 +175,7 @@ main{padding:3rem 0}
   gap: 0.5rem;
 }
 
-.form-input, .form-textarea, .form-file {
+.form-input, .form-textarea {
   background: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: 8px;
@@ -196,10 +196,6 @@ main{padding:3rem 0}
   resize: vertical;
 }
 
-.form-file {
-  background: transparent;
-}
-
 .submit-btn {
   background: var(--accent);
   color: white;
@@ -214,6 +210,40 @@ main{padding:3rem 0}
 
 .submit-btn:hover {
   background: var(--accent-hover);
+}
+
+.comments-acc {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.comments-acc-hd {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.2rem;
+  cursor: pointer;
+  background: transparent;
+  color: var(--primary);
+  border: 0;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 1.1rem;
+}
+
+.comments-acc-body {
+  border-top: 1px solid var(--border);
+  max-height: 0;
+  overflow: hidden;
+  padding: 0 1.2rem;
+  transition: max-height .35s ease, padding .35s ease;
+}
+
+.comments-acc.open .comments-acc-body {
+  padding: 1rem 1.2rem;
+  max-height: 1000px;
 }
 
 .comments-list {
@@ -254,13 +284,6 @@ main{padding:3rem 0}
   color: var(--secondary);
   line-height: 1.6;
   font-size: 0.95rem;
-}
-
-.comment-image {
-  max-width: 200px;
-  border-radius: 8px;
-  border: 1px solid var(--border);
-  margin-top: 1rem;
 }
 
 .no-comments {
@@ -415,18 +438,20 @@ footer{text-align:center;padding:3rem 0 2.5rem;border-top:1px solid var(--border
             <textarea id="message" class="form-textarea" placeholder="Write your message here..." required maxlength="500"></textarea>
           </div>
           
-          <div class="form-group">
-            <label for="image" style="color: var(--secondary); font-size: 0.9rem;">Image (optional):</label>
-            <input type="file" id="image" class="form-file" accept="image/*">
-            <small style="color: var(--secondary); font-size: 0.8rem;">Max 2MB, formats: JPG, PNG, GIF</small>
-          </div>
-          
           <button type="submit" class="submit-btn">
             <i class="fas fa-paper-plane"></i> Send Comment
           </button>
         </form>
 
-        <div class="comments-list" id="commentsList"></div>
+        <div class="comments-acc glass" id="commentsAcc">
+          <button class="comments-acc-hd">
+            <span>Comment History</span>
+            <i class="fa-solid fa-chevron-down chev"></i>
+          </button>
+          <div class="comments-acc-body">
+            <div class="comments-list" id="commentsList"></div>
+          </div>
+        </div>
       </div>
     </section>
   </main>
@@ -483,11 +508,20 @@ document.querySelectorAll('[data-acc]').forEach(acc => {
     });
 });
 
+const commentsAcc = document.getElementById('commentsAcc');
+const commentsAccHd = commentsAcc.querySelector('.comments-acc-hd');
+const commentsAccBody = commentsAcc.querySelector('.comments-acc-body');
+
+commentsAccHd.addEventListener('click', () => {
+    const open = commentsAcc.classList.toggle('open');
+    commentsAccHd.setAttribute('aria-expanded', open);
+    commentsAccBody.setAttribute('aria-hidden', !open);
+});
+
 const form = document.getElementById("commentForm");
 const nameField = document.getElementById("name");
 const msgField = document.getElementById("message");
 const list = document.getElementById("commentsList");
-const fileInput = document.getElementById("image");
 
 function escape(s) {
   return s.replace(/[&<>"']/g, m => ({
@@ -512,12 +546,18 @@ async function loadComments() {
   const { data } = await db
     .from("Comment")
     .select("*")
-    .order("created_at", { ascending: false });
+    .order("created_at", { ascending: false })
+    .limit(2);
+
+  if (data.length === 0) {
+    list.innerHTML = '<div class="no-comments">No comments yet. Be the first to comment!</div>';
+    return;
+  }
 
   list.innerHTML = data
     .map(
       r => `
-      <div class="comment-item glass">
+      <div class="comment-item">
         <div class="comment-header">
           <div class="comment-author">${escape(r.name || "Anonymous")}</div>
           <div class="comment-date">${formatDate(r.created_at)}</div>
@@ -526,7 +566,7 @@ async function loadComments() {
       </div>
     `
     )
-    .join("");
+    .join('');
 }
 
 form.addEventListener("submit", async e => {
@@ -540,27 +580,14 @@ form.addEventListener("submit", async e => {
     return;
   }
 
-  if (fileInput.files[0] && fileInput.files[0].size > 2 * 1024 * 1024) {
-    alert('File too large! Maximum 2MB.');
-    return;
-  }
-
   await db.from("Comment").insert({
     name: name,
     message: message
   });
   
   msgField.value = "";
-  fileInput.value = "";
+  nameField.value = "";
   loadComments();
-});
-
-fileInput.addEventListener('change', (e) => {
-  const file = e.target.files[0];
-  if (file && file.size > 2 * 1024 * 1024) {
-    alert('File too large! Maximum 2MB.');
-    e.target.value = '';
-  }
 });
 
 loadComments();
