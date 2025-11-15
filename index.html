@@ -68,6 +68,7 @@
   --shadow: rgba(0,0,0,.6);
   --ring-1: #8b5cf6;
   --ring-2: #7c3aed;
+  --gold: #ffd700;
 }
 
 *{margin:0;padding:0;box-sizing:border-box}
@@ -230,31 +231,36 @@ main{padding:3rem 0}
 
 .comment-header {
   display: flex;
-  justify-content: between;
-  align-items: center;
-  margin-bottom: 0.8rem;
+  flex-direction: column;
+  gap: 0.3rem;
+  margin-bottom: 1rem;
 }
 
 .comment-author {
-  font-weight: 600;
-  color: var(--primary);
+  font-weight: 700;
+  color: var(--gold);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 1rem;
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
 }
 
 .comment-date {
   color: var(--secondary);
-  font-size: 0.85rem;
+  font-size: 0.8rem;
+  font-family: Inter, sans-serif;
 }
 
 .comment-text {
   color: var(--secondary);
   line-height: 1.6;
-  margin-bottom: 1rem;
+  font-size: 0.95rem;
 }
 
 .comment-image {
   max-width: 200px;
   border-radius: 8px;
   border: 1px solid var(--border);
+  margin-top: 1rem;
 }
 
 .no-comments {
@@ -493,6 +499,15 @@ function escape(s) {
   }[m]));
 }
 
+function formatDate(dateString) {
+  const date = new Date(dateString);
+  return date.toLocaleDateString('en-US', { 
+    year: 'numeric', 
+    month: 'long', 
+    day: 'numeric' 
+  });
+}
+
 async function loadComments() {
   const { data } = await db
     .from("Comment")
@@ -504,8 +519,8 @@ async function loadComments() {
       r => `
       <div class="comment-item glass">
         <div class="comment-header">
-          <span class="comment-author">${escape(r.name || "Anonymous")}</span>
-          <span class="comment-date">${new Date(r.created_at).toLocaleString('en-US')}</span>
+          <div class="comment-author">${escape(r.name || "Anonymous")}</div>
+          <div class="comment-date">${formatDate(r.created_at)}</div>
         </div>
         <div class="comment-text">${escape(r.message)}</div>
       </div>
